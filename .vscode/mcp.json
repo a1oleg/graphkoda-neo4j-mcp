@@ -1,0 +1,20 @@
+{
+  "servers": {
+    "graphkoda-neo4j": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "graphkoda_neo4j_mcp.server"],
+      "env": {
+        "NEO4J_URI": "${input:neo4jUri}",
+        "NEO4J_USER": "${input:neo4jUser}",
+        "NEO4J_PASSWORD": "${input:neo4jPassword}",
+        "NEO4J_DATABASE": "neo4j"
+      }
+    }
+  },
+  "inputs": [
+    { "id": "neo4jUri", "type": "promptString", "description": "Neo4j URI", "default": "bolt://127.0.0.1:7687" },
+    { "id": "neo4jUser", "type": "promptString", "description": "Neo4j user", "default": "neo4j" },
+    { "id": "neo4jPassword", "type": "promptString", "description": "Neo4j password", "password": true }
+  ]
+}
