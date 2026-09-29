@@ -10,18 +10,24 @@ production boundary needs stricter guarantees than a general `read-cypher` tool.
 
 ## Why a separate server
 
-The Redis-to-Neo4j ingestion path remains a deterministic application pipeline.
-This MCP sits after Neo4j and only reads the materialized graph:
+Agents need to follow code relationships and observed execution paths without
+retrieving an entire graph. This server provides focused, read-only operations
+with enforced traversal and response limits, making graph exploration predictable
+for an agent workflow.
 
 ```text
-runtime logs -> Redis -> normalizer -> Neo4j
-                                      ^
-                                      |
-                          graphkoda-neo4j-mcp
-                                      ^
-                                      |
-                                    agent
+agent -> graphkoda-neo4j-mcp -> Neo4j
 ```
+
+## Data integration
+
+The server reads an existing Neo4j graph. Collecting runtime events, normalizing
+them, and loading static or runtime data are responsibilities of a separate
+ingestion pipeline. The MCP server does not depend on the transport or queue
+used by that pipeline.
+
+For example, a code analyzer and a runtime-event collector can populate Neo4j;
+an agent can then use this server to explore the resulting relationships.
 
 The graphKoda preset understands the current overlay convention:
 
